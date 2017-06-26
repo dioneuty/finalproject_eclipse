@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="model">
+	<select id="selectAll" resultType="hashmap" parameterType="String">
+		SELECT ROWNUM RNUM, T.* FROM ${VALUE} t 
+	</select>
+	
+	<!-- board sql -->
+	<!-- board basic paging -->
+	<select id="boardList" resultType="hashmap" parameterType="String">
+		SELECT * FROM ${value} ORDER BY ROWNUM DESC
+	</select>
+	<select id="boardRow" resultType="int" parameterType="String">
+		SELECT COUNT(ROWNUM) FROM ${value}
+	</select>
+	<select id="boardMax" resultType="int" parameterType="String">
+		SELECT MAX(ROWNUM) FROM ${value}
+	</select>
+	<select id="boardPaging" resultType="hashmap" parameterType="hashmap">
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM BETWEEN ${min} AND ${max}
+	</select>
+	<!-- <select id="boardPaging" resultType="hashmap" parameterType="hashmap">
+		SELECT * FROM ${table} WHERE ${pk} BETWEEN ${min} AND ${max} ORDER BY ${pk} DESC
+	</select> -->
+	<!-- board search paging -->
+	<select id="boardSearch" resultType="hashmap" parameterType="hashmap">
+		SELECT ROWNUM RNUM, T.* FROM ${table} t WHERE ${schema} LIKE '%'||#{text}||'%' ORDER BY RNUM DESC
+	</select>
+	<select id="boardDateSearch" resultType="hashmap" parameterType="hashmap">
+		SELECT ROWNUM RNUM, T.* FROM ${table} T WHERE ${schema} BETWEEN #{data1} AND #{date2}
+	</select>
+	<select id="boardSearchCount" resultType="int" parameterType="hashmap">
+		SELECT COUNT(ROWNUM) FROM ${table} WHERE ${schema} LIKE '%'||#{text}||'%'
+	</select>
+	<!-- <select id="boardSearchPaging" resultType="hashmap" parameterType="hashmap">
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${schema} LIKE '%'||#{text}||'%' AND RNUM BETWEEN ${min} and ${max} 
+	</select> -->
+	<select id="boardSearchPaging" resultType="hashmap" parameterType="hashmap">
+		SELECT * FROM ${table} WHERE ${schema} LIKE '%'||#{text}||'%' AND ${pk} BETWEEN ${min} and ${max} ORDER BY ${pk} DESC
+	</select>
+	<!-- board detail -->
+	<select id="boardDetailOne" resultType="hashmap" parameterType="hashmap">
+		SELECT * FROM ${table} WHERE ${pk} = ${idx}
+	</select>
+	<select id="boardViewPKnum" resultType="int" parameterType="hashmap">
+		SELECT ${schema} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM = ${idx}
+	</select>
+	<select id="boardViewPKstring" resultType="String" parameterType="hashmap">
+		SELECT ${schema} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM = ${idx}
+	</select>
+	<!-- board delete -->
+	<delete id="boardDeleteOne_String" parameterType="hashmap">
+		DELETE FROM ${table} WHERE ${schema}=#{string}
+	</delete>
+	<delete id="boardDeleteOne_Num" parameterType="hashmap">
+		DELETE FROM ${table} WHERE ${schema}=${num}
+	</delete>
+	<!-- board view count -->
+	<select id="boardViewCnt" resultType="hashmap" parameterType="hashmap">
+		SELECT anum, achk FROM (SELECT ROWNUM RNUM, i.* FROM ${table} i ORDER BY RNUM DESC) WHERE RNUM = ${idx}
+	</select>
+	
+	<!-- alarm_Board -->
+	<insert id="alarmAdd" parameterType="hashmap">
+		INSERT INTO INFORM (ANUM,ASUB,ACNTNT,ASDATE,ACHK) VALUES (ALARM_SEQ.nextVal,#{sub},#{cntnt},SYSDATE,0)
+	</insert>
+	<update id="alarmUpCnt" parameterType="int">
+		UPDATE INFORM SET achk=1, ardate=SYSDATE WHERE anum = ${value}
+	</update>
+	<update id="alarmEdit" parameterType="hashmap">
+		UPDATE INFORM SET asub=#{sub}, acntnt=#{cntnt}, asdate=SYSDATE, ardate=NULL, achk=0 WHERE anum = ${anum}
+	</update>
+	
+
+	<!-- store -->
+	<select id="so_storeListArea" parameterType="String" resultType="hashmap">
+		SELECT ROWNUM rnum, t.* FROM FRANCHISE t WHERE FADDRESS LIKE '%'||#{value}||'%'
+	</select>
+	<select id="so_storeListFname" parameterType="String" resultType="hashmap">
+		SELECT ROWNUM rnum, t.* FROM FRANCHISE t WHERE FNAME LIKE '%'||#{value}||'%'
+	</select>
+	
+	
+	<select id="selectOne" parameterType="int" resultType="com.hb.project.model.dto1.AdminVo">
+		SELECT ROWNUM rnum, t.* FROM GUEST_DAY03 t WHERE SABUN=#{value}
+	</select>
+	<insert id="insertOne" parameterType="com.hb.project.model.dto1.AdminVo">
+		INSERT INTO GUEST_DAY03 VALUES
+		(#{sabun},#{name},TO_CHAR(SYSDATE,'YYYY/MM/DD'),#{pay})
+	</insert>
+	<update id="updateOne" parameterType="com.hb.project.model.dto1.AdminVo">
+		UPDATE GUEST_DAY03 SET NAME=#{name},PAY=#{pay} WHERE SABUN=#{sabun}
+	</update>
+	
+	
+</mapper>

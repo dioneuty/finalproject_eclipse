@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="kr">
+
+<head>
+	<title>Main page</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../css/frame.css">
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$('document').ready(function() {
+			$('.header').load('../template/header.html');
+			$('.menu').load('../template/menu.html');
+			$('.modalList').load('../template/modal.html');
+		});
+	</script>
+	<style>
+		.mxWidth{
+			max-width: 500px;
+		}
+	</style>
+</head>
+
+<body>
+	<!--	<div class="fix1" data-spy="affix" data-offset-top="300">-->
+	<div class="row header">
+		<!--importing header.html on jquery-->
+	</div>
+	<div class="row menu">
+		<!--importing header.html on jquery-->
+	</div>
+	<!--</div>-->
+	<div class="container" style="height:2000px">
+		<!--로그인-->
+		<div class="mxWidth">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h2 class="text-center">점포관리시스템 로그인</h2>
+				</div>
+				<div class="row">
+
+				</div>
+				<div class="panel-body">
+
+					<form action="">
+						<div class="form-group">
+							<label for="id">ID:</label>
+							<input type="id" class="form-control" id="id" placeholder="ID를 입력하세요" name="id">
+						</div>
+						<div class="form-group">
+							<label for="pwd">Password:</label>
+							<input type="password" class="form-control" id="pwd" placeholder="password를 입력하세요" name="pwd">
+						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="remember">아이디 기억</label>
+						</div>
+						<button type="submit" class="btn btn-default">로그인</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!--계정 선택-->
+		 <div class="mxWidth">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h2 class="text-center">로그인할 계정</h2>
+				</div>
+				<div class="panel-body text-center">
+					<form action="" class="form-inline">
+						<div class="form-group">
+
+							<label for="login_type">종류</label>
+							<select name="login_type" class="form-control" id="login_type">
+								<option value="admin">관리자</option>
+								<option value="store">가맹점</option>
+								<option value="edu">직원 교육용</option>
+							</select>
+							<button type="submit" class="btn btn-primary">로그인</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+		<!--회원 추가 -->
+		<div class="mxWidth">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h2 class="text-center">회원 추가</h2>
+				</div>
+				<div class="panel-body">
+					<hr>
+					<form action="/action_page.php">
+						<h4 class="text-center well well-sm">필수 정보</h4>
+						<div class="form-group">
+							<label for="id">ID:</label>
+							<input type="text" class="form-control" id="id" placeholder="ID를 입력하세요" name="id">
+						</div>
+						<div class="form-group">
+							<label for="pwd">Password:</label>
+							<input type="password" class="form-control" id="pwd" placeholder="password를 입력하세요" name="pwd">
+						</div>
+						<h4 class="text-center well well-sm">선택 정보</h4>
+						<div class="form-group">
+							<label for="phone">휴대폰:</label>
+							<input type="text" class="form-control" id="phone" placeholder="휴대폰 번호를 입력하세요" name="phone">
+						</div>
+						<div class="form-group">
+							<label for="email">E-mail:</label>
+							<input type="text" class="form-control" id="email" placeholder="이메일 주소를 입력하세요" name="email">
+						</div>
+						<div class="text-center">
+							<div class="btn-group">
+								<button type="submit" class="btn btn-primary">회원추가</button>
+								<button type="submit" class="btn btn-default">취소</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!--점포 찾기-->
+		<div class="mxWidth">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					점포 찾기
+				</div>
+				<div class="panel-body">
+					<form action="" class="form-horizontal">
+						<label for="big_arear">광역시/도</label>
+						<input type="text" class="form-control" name="big_area" id="big_area" placeholder="지역 대분류">
+						<label for="medium_area">시/구</label>
+						<input type="text" class="form-control" name="medium_area" id="medium_area" placeholder="지역 중분류">
+						<label for="small_area">동</label>
+						<input type="text" class="form-control" name="small_area" id="small_area" placeholder="지역 소분류">
+						<button type="submit">찾기</button>
+					</form>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="modalList">
+		<!--importing modal.html on jquery-->
+	</div>
+
+
+</body>
+
+</html>
