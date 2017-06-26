@@ -29,7 +29,7 @@ public class ErpController{
 	@RequestMapping("/erp/alarm")
 	public String alarm(Model model){
 		try {
-			model.addAttribute("alist", modelDao.board_paging("inform","anum"));
+			model.addAttribute("alist", modelDao.board_list("inform"));
 			model.addAttribute("links", modelDao.board_pagelinks("inform"));
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -57,11 +57,11 @@ public class ErpController{
 				
 			}else if(search_text != null && req.getMethod().equals("POST")){
 				if(search_type.equals("sub")){
-					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ASUB","ANUM"));
+					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ASUB"));
 					
 				}
 				if(search_type.equals("cntnt")){
-					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ACNTNT","ANUM"));
+					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ACNTNT"));
 				}
 				//if(search_type == "author") model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","A"));
 			}
@@ -132,7 +132,7 @@ public class ErpController{
 				}
 				
 				System.out.println("만료"+sess);
-				model.addAttribute("alist", modelDao.board_paging(idx,"INFORM","anum"));
+				model.addAttribute("alist", modelDao.board_paging(idx,"INFORM"));
 				startend = modelDao.page_startEnd(idx,"INFORM");		
 				
 				model.addAttribute("links", modelDao.board_pagelinks(idx, "INFORM"));
@@ -143,12 +143,12 @@ public class ErpController{
 				System.out.println("도중"+sess);
 				
 				if(sess_type.equals("sub")){
-					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ANUM", "ASUB", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ASUB", idx));
 					startend = modelDao.pageSearch_startEnd(sess_type, sess_text,"inform","ASUB",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(sess_type,sess_text,"INFORM","ASUB", idx));
 				}
 				if(sess_type.equals("cntnt")){
-					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ANUM", "ACNTNT", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ACNTNT", idx));
 					startend = modelDao.pageSearch_startEnd(sess_type, sess_text,"inform","ACNTNT",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(sess_type,sess_text,"INFORM","ACNTNT", idx));
 				}
@@ -168,12 +168,12 @@ public class ErpController{
 				
 				if(search_type.equals("sub")){
 					
-					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ANUM","ASUB", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ASUB", idx));
 					startend = modelDao.pageSearch_startEnd(search_type, search_text,"inform","ASUB",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(search_type,search_text,"INFORM","ASUB", idx));
 				}
 				if(search_type.equals("cntnt")){
-					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ANUM","ACNTNT", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ACNTNT", idx));
 					startend = modelDao.pageSearch_startEnd(search_type, search_text,"inform","ACNTNT",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(search_type,search_text,"INFORM","ACNTNT", idx));
 				}
@@ -229,7 +229,7 @@ public class ErpController{
 	@RequestMapping(value="/erp/alarm/detail/{idx}", method=RequestMethod.GET)
 	public String alarmDetail(@PathVariable int idx, Model model){
 		try{
-			model.addAttribute("detail", modelDao.board_detail(idx, "inform", "anum"));
+			model.addAttribute("detail", modelDao.board_detail(idx, "inform"));
 			modelDao.alarm_cnt(idx);
 			model.addAttribute("nowPage", modelDao.board_nowPage(idx, "inform"));
 			model.addAttribute("idx", idx);
@@ -276,7 +276,7 @@ public class ErpController{
 		}
 		try {
 			if(req.getMethod().equals("GET")){
-				model.addAttribute("detail", modelDao.board_detail(idx, "inform","anum"));
+				model.addAttribute("detail", modelDao.board_detail(idx, "inform"));
 				model.addAttribute("nowPage", modelDao.board_nowPage(idx, "inform"));
 			}else if(req.getMethod().equals("POST")){
 	
@@ -406,7 +406,7 @@ public class ErpController{
 	public String storeDetail(@PathVariable int idx, Model model){
 
 		try {
-			model.addAttribute("list", modelDao.board_detail(idx,"franchise","fnum"));
+			model.addAttribute("list", modelDao.board_detail(idx,"franchise"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -423,7 +423,7 @@ public class ErpController{
 		}
 		try {
 			if(req.getMethod().equals("GET")){
-				model.addAttribute("list", modelDao.board_detail(idx, "franchise","fnum"));
+				model.addAttribute("list", modelDao.board_detail(idx, "franchise"));
 				return "erp/store_edit";
 			}else if(req.getMethod().equals("POST")){
 	

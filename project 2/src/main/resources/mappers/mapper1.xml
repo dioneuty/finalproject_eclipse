@@ -10,23 +10,20 @@
 	<!-- board sql -->
 	<!-- board basic paging -->
 	<select id="boardList" resultType="hashmap" parameterType="String">
-		SELECT * FROM ${value} ORDER BY ROWNUM DESC
+		SELECT ROWNUM RNUM, T.* FROM ${value} T ORDER BY RNUM DESC
 	</select>
-	<select id="boardRow" resultType="int" parameterType="String">
+	<select id="boardCount" resultType="int" parameterType="String">
 		SELECT COUNT(ROWNUM) FROM ${value}
 	</select>
 	<select id="boardMax" resultType="int" parameterType="String">
 		SELECT MAX(ROWNUM) FROM ${value}
 	</select>
 	<select id="boardPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM BETWEEN ${min} AND ${max}
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk} ASC) WHERE RNUM BETWEEN ${min} AND ${max}
 	</select>
-	<!-- <select id="boardPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM ${table} WHERE ${pk} BETWEEN ${min} AND ${max} ORDER BY ${pk} DESC
-	</select> -->
 	<!-- board search paging -->
 	<select id="boardSearch" resultType="hashmap" parameterType="hashmap">
-		SELECT ROWNUM RNUM, T.* FROM ${table} t WHERE ${schema} LIKE '%'||#{text}||'%' ORDER BY RNUM DESC
+		SELECT ROWNUM RNUM, T.* FROM ${table} t WHERE ${schema} LIKE '%'||#{text}||'%'
 	</select>
 	<select id="boardDateSearch" resultType="hashmap" parameterType="hashmap">
 		SELECT ROWNUM RNUM, T.* FROM ${table} T WHERE ${schema} BETWEEN #{data1} AND #{date2}
@@ -34,15 +31,12 @@
 	<select id="boardSearchCount" resultType="int" parameterType="hashmap">
 		SELECT COUNT(ROWNUM) FROM ${table} WHERE ${schema} LIKE '%'||#{text}||'%'
 	</select>
-	<!-- <select id="boardSearchPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${schema} LIKE '%'||#{text}||'%' AND RNUM BETWEEN ${min} and ${max} 
-	</select> -->
 	<select id="boardSearchPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM ${table} WHERE ${schema} LIKE '%'||#{text}||'%' AND ${pk} BETWEEN ${min} and ${max} ORDER BY ${pk} DESC
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk} ASC) WHERE ${schema} LIKE '%'||#{text}||'%' AND RNUM BETWEEN ${min} and ${max} 
 	</select>
 	<!-- board detail -->
 	<select id="boardDetailOne" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM ${table} WHERE ${pk} = ${idx}
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM = ${idx}
 	</select>
 	<select id="boardViewPKnum" resultType="int" parameterType="hashmap">
 		SELECT ${schema} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM = ${idx}
