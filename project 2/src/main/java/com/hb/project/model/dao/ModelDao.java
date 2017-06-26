@@ -32,7 +32,7 @@ public interface ModelDao {
 	//store owner	
 	List<StoreOwnerVo> so_ownerInfos() throws SQLException;
 	StoreOwnerVo so_oneOwnerInfo(int ownerNum, String ownerName) throws SQLException;
-	List<HashMap<String, Object>> so_storeList() throws SQLException;
+	List<HashMap<String, Object>> so_storeList(String table, String pk, String search_option, String value) throws SQLException;
 	
 	//store worker
 	List<StoreWorkerVo> sw_workerInfos() throws SQLException;
@@ -42,8 +42,6 @@ public interface ModelDao {
 	List<StoreEduVo> edu_testSubjects() throws SQLException;
 	
 	//storelist
-	List<HashMap<String, Object>> so_storeListArea(String area) throws SQLException;
-	List<HashMap<String, Object>> so_storeListFname(String fname) throws SQLException;
 	void store_addOne(HashMap<String, Object> bean) throws SQLException;
 	void store_edit(HashMap<String, Object> bean) throws SQLException;
 	

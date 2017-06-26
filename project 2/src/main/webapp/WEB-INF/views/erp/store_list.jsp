@@ -77,10 +77,12 @@
 					</tr>
 					<c:forEach items="${ slist}" var="store">
 					<tr>
-						<td>${store.RNUM }</td>
-						<td>${store.FNAME }</td>
-						<td>${store.FPHONE }</td>
-						<td>${store.FADDRESS }</td>
+						<td><a href="./detail/${store.FNUM}">${store.FNUM }</a></td>
+						<td><a href="./detail/${store.FNUM}">${store.FNAME }</a></td>
+						<td><a href="./detail/${store.FNUM}">${store.FPHONE }</a></td>
+						<td><a href="./detail/${store.FNUM}">${store.FADDRESS }</a></td>
+						<a href="./edit/${store.FNUM}" class="btn btn-default" role="button">수정</a>
+						<a href="./delete/${store.FNUM}" class="btn btn-default" role="button">삭제</a>
 					</tr>
 					</c:forEach>
 					
@@ -89,8 +91,6 @@
 					<div class="col-sm-4 col-sm-offset-8">
 						<div class="well text-center">
 							<a href="#" class="btn btn-default" role="button">추가</a>
-							<a href="#" class="btn btn-default" role="button">수정</a>
-							<a href="#" class="btn btn-default" role="button">삭제</a>
 						</div>
 					</div>
 				</div>

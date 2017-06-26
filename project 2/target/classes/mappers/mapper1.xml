@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="model">
 	<select id="selectAll" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (select ROWNUM RNUM, i.* from ${table} i order by ${pk})
+		SELECT * FROM (select ROWNUM RNUM, i.* from ${table} i order by ${pk}) ORDER BY RNUM
 	</select>
 	
 	<!-- board sql -->
@@ -72,14 +72,17 @@
 	
 
 	<!-- store -->
-	<select id="so_storeListArea" parameterType="String" resultType="hashmap">
-		SELECT ROWNUM rnum, t.* FROM FRANCHISE t WHERE FADDRESS LIKE '%'||#{value}||'%'
+	<select id="searchListOption" parameterType="String" resultType="hashmap">
+		SELECT * FROM (select ROWNUM rnum, t.* FROM ${table} t order by ${pk}) WHERE ${search_option} LIKE '%'||#{value}||'%' ORDER BY RNUM DESC
 	</select>
-	<select id="so_storeListFname" parameterType="String" resultType="hashmap">
-		SELECT ROWNUM rnum, t.* FROM FRANCHISE t WHERE FNAME LIKE '%'||#{value}||'%'
-	</select>
+	<insert id="storeAdd" parameterType="hashmap">
+		INSERT INTO FRANCHISE (FNUM,FNAME,FPHONE,FADDRESS) VALUES (FRANCHISE_SEQ.nextVal,#{name},#{phone},#{address})
+	</insert>
+	<update id="storeEdit" parameterType="hashmap">
+		UPDATE FRANCHISE SET fname=#{name}, fphone=#{cntnt}, faddress=#{address} # WHERE anum = ${anum}
+	</update>
 	
-	
+	<!-- etc -->
 	<select id="selectOne" parameterType="int" resultType="com.hb.project.model.dto1.AdminVo">
 		SELECT ROWNUM rnum, t.* FROM GUEST_DAY03 t WHERE SABUN=#{value}
 	</select>

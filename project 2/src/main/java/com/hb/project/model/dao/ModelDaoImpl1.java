@@ -103,33 +103,32 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 
 	@Override
-	public List<HashMap<String, Object>> so_storeList() throws SQLException {
-		List<HashMap<String, Object>> list = sqlSession.selectList("model.so_storeList");
+	public List<HashMap<String, Object>> so_storeList(String table, String pk, String search_option, String value) throws SQLException {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pk", pk);
+		params.put("table", table);
+		params.put("search_option", search_option);	
+		params.put("value", value);
+
+		List<HashMap<String, Object>> list = null;
+		
+		if(search_option.equals("area")){
+			list = sqlSession.selectList("model.searchListOption", params);
+		}else if(search_option.equals("fname")){
+			list = sqlSession.selectList("model.searchListOption", params);
+		}
+		
 		System.out.println(list);
 		return list;
 	}
 
-	@Override
-	public List<HashMap<String, Object>> so_storeListArea(String area) {
-		List<HashMap<String, Object>> list = sqlSession.selectList("model.so_storeListArea", area);
-		System.out.println(list);
-		return list;
-	}
-
-	@Override
-	public List<HashMap<String, Object>> so_storeListFname(String fname) {
-		List<HashMap<String, Object>> list = sqlSession.selectList("model.so_storeListFname", fname);
-		System.out.println(list);
-		return list;
-	}
 	
 	@Override
 	public List<HashMap<String, Object>> selectList(String table, String pk) throws SQLException {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("table", table);
 		params.put("pk", pk);
-		return sqlSession.selectOne("model.selectAll", params);
-	
+		return sqlSession.selectList("model.selectAll", params);
 	}
 	
 	@Override

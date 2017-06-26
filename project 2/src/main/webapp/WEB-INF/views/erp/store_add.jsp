@@ -36,48 +36,34 @@
 			<div class="col-md-8">
 				<div class="page-header text-center">
 
-					<h3>주문 추가</h3>
+					<h3>점포 추가</h3>
 				</div>
 				<div class="well">
-					<form action="/insert" method="post">
+					<form method="post">
 						<div class="row">
 							<div class="col-sm-6 form-group">
-								<label for="orderMaterail">주문할 상품</label>
-								<select class="form-control" name="orderMaterial" id="">
-										<option value="ketchup">케찹</option>
-										<option value="cheese">치즈</option>
-										<option value="bread">빵</option>
-									</select>
+								<label for="fnum">점포 이름</label>
+								<input type="text" name="fnum" class="form-control" />
 							</div>
 							<div class="col-sm-6 form-group">
-								<label for="quantity">주문수량</label>
-								<input class="form-control" type="number" name="quantity" id="quantity" min="1" max="1000" />
+								<label for="fphone">휴대폰 번호</label>
+								<input type="text" name="fphone" class="form-control" />
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-sm-6 form-group">
-								<label for="sendArea">발송지</label>
-								<input type="text" name="sendArea" id="sendArea" class="form-control">
-								<div class="text-right">
-									<button type="search" class="btn btn-default text-right">발송지 검색</button>
-								</div>
-							</div>
-							<div class="col-sm-6 form-group">
-								<label for="sendType">배송타입</label>
-								<select name="sendType" id="sendType" class="form-control">
-									<option value="normal">보통</option>
-									<option value="express">급속</option>
-								</select>
+						<div class="col-sm-12 form-group">
+							<label for="faddress">주소</label>
+							<input type="text" name="faddress" id="faddress" class="form-control">
+							<div class="text-right">
+								<button type="search" class="btn btn-default text-right">발송지 검색</button>
 							</div>
 						</div>
 						
 						<div class="text-center">
-							<label for="cntnt">추가할 주문 메시지</label>
-							<textarea class="form-control detail_textarea" rows="5" name="cntnt" placeholder="내용을 입력해주세요" style="background-color: white; color: black"></textarea>
 							<br/>
 							<br/>
 							<button type="submit" class="btn btn-info" role="button">추가</button>
-							<a href="#" class="btn btn-primary" role="button">취소 후 목록</a>
+							<button type="reset" class="btn btn-warning" role="button">취소</button>
+							<a href="./" class="btn btn-primary" role="button">목록</a>
 						</div>
 					</form>
 				</div>

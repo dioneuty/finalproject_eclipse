@@ -53,7 +53,7 @@ public class ErpController{
 		try {
 			List<HashMap<String, Object>> alist = null;
 			if(search_text == null || req.getMethod().equals("GET")){
-				alarm(model); //ÇÁ·ĞÆ®¾Øµå·Î Á¦¾îÇÒÁö, ¹é¾Øµå·Î Á¦¾îÇÒÁö °í¹Î Áß
+				alarm(model); //Ã‡ÃÂ·ÃÃ†Â®Â¾Ã˜ÂµÃ¥Â·Ã ÃÂ¦Â¾Ã®Ã‡Ã’ÃÃ¶, Â¹Ã©Â¾Ã˜ÂµÃ¥Â·Ã ÃÂ¦Â¾Ã®Ã‡Ã’ÃÃ¶ Â°Ã­Â¹Ã ÃÃŸ
 				
 			}else if(search_text != null && req.getMethod().equals("POST")){
 				if(search_type.equals("sub")){
@@ -131,7 +131,7 @@ public class ErpController{
 					idx = 1;
 				}
 				
-				System.out.println("¸¸·á"+sess);
+				System.out.println("Â¸Â¸Â·Ã¡"+sess);
 				model.addAttribute("alist", modelDao.board_paging(idx,"INFORM","anum"));
 				startend = modelDao.page_startEnd(idx,"INFORM");		
 				
@@ -140,7 +140,7 @@ public class ErpController{
 			}else if(sess.getAttribute("searText") != null && req.getMethod().equals("GET")){
 				String sess_text = (String) sess.getAttribute("searText");
 				String sess_type = (String) sess.getAttribute("searType");
-				System.out.println("µµÁß"+sess);
+				System.out.println("ÂµÂµÃÃŸ"+sess);
 				
 				if(sess_type.equals("sub")){
 					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ASUB","ANUM", idx));
@@ -162,7 +162,7 @@ public class ErpController{
 				
 				idx = 1;
 				
-				System.out.println("Ã³À½"+sess);
+				System.out.println("ÃƒÂ³Â½"+sess);
 				sess.setAttribute("searType", search_type);
 				sess.setAttribute("searText", search_text);	
 				
@@ -379,26 +379,17 @@ public class ErpController{
 		String area = req.getParameter("area");
 		String fname = req.getParameter("fname");
 		
-		if(area == null && fname == null || req.getMethod().equals("GET")){
-			try {
-				model.addAttribute("slist", modelDao.selectList("franchise","FNUM"));
-			} catch (SQLException e) {
-				e.printStackTrace();
+		try {
+			if(area == null && fname == null || req.getMethod().equals("GET")){
+					model.addAttribute("slist", modelDao.selectList("franchise","FNUM"));
+			}else if(area!=null && req.getMethod().equals("POST")){
+					model.addAttribute("slist", modelDao.so_storeList("franchise","fnum","area",area));
+			}else if (fname!=null && req.getMethod().equals("POST")) {
+				System.out.println("fname");
+					model.addAttribute("slist", modelDao.so_storeList("franchise","fnum","fname",fname));
 			}
-		}else if(area!=null && req.getMethod().equals("POST")){
-			
-			try {
-				model.addAttribute("slist", modelDao.so_storeListArea(area));
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}else if (fname!=null && req.getMethod().equals("POST")) {
-			System.out.println("fname");
-			try {
-				model.addAttribute("slist", modelDao.so_storeListFname(fname));
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return "erp/store_list";
 	}	
@@ -406,9 +397,10 @@ public class ErpController{
 	
 	@RequestMapping("/erp/store/detail/{idx}")
 	public String storeDetail(@PathVariable int idx, Model model){
-
 		try {
 			model.addAttribute("list", modelDao.board_detail(idx,"franchise","FNUM"));
+			model.addAttribute("nowPage", modelDao.board_nowPage(idx, "franchise", "fnum"));
+			model.addAttribute("idx", idx);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -426,16 +418,19 @@ public class ErpController{
 		try {
 			if(req.getMethod().equals("GET")){
 				model.addAttribute("list", modelDao.board_detail(idx, "franchise","FNUM"));
+				model.addAttribute("nowPage", modelDao.board_nowPage(idx, "franchise", "fnum"));
+				model.addAttribute("idx", idx);
 				return "erp/store_edit";
 			}else if(req.getMethod().equals("POST")){
 	
 				HashMap<String,Object> bean = new HashMap<String,Object>();
-				bean.put("sub", req.getParameter("sub"));
-				bean.put("cntnt", req.getParameter("cntnt"));
-				bean.put("anum", req.getParameter("anum"));
+				bean.put("faddress", req.getParameter("faddress"));
+				bean.put("fphone", req.getParameter("fphone"));
+				bean.put("fname", req.getParameter("fname"));
+				bean.put("fnum", idx);
 				modelDao.store_edit(bean);
 				
-				Integer nowPage = modelDao.board_nowPage(idx, "inform", "anum");
+				Integer nowPage = modelDao.board_nowPage(idx, "franchise", "fnum");
 				return "redirect:../" + nowPage;	
 			}	
 		} catch (SQLException e) {

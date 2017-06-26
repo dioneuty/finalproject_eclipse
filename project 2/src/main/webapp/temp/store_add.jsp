@@ -8,10 +8,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<title>Insert title here</title>
-	<link rel="stylesheet" href="../resources/css/css1/bootstrap.min.css"/>
-	<link rel="stylesheet" href="../resources/css/css1/erp1.css"/>
-	<script src="../resources/js/jquery.min.js"></script>
-	<script src="../resources/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../../resources/css/css1/bootstrap.min.css"/>
+	<link rel="stylesheet" href="../../resources/css/css1/erp1.css"/>
+	<script src="../../resources/js/jquery.min.js"></script>
+	<script src="../../resources/js/bootstrap.min.js"></script>
 	
 </head>
 
@@ -39,7 +39,7 @@
 					<h3>점포 추가</h3>
 				</div>
 				<div class="well">
-					<form action="/insert" method="post">
+					<form method="post">
 						<div class="row">
 							<div class="col-sm-6 form-group">
 								<label for="fnum">점포 이름</label>
