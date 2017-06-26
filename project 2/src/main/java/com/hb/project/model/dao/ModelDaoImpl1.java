@@ -124,14 +124,20 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 	
 	@Override
-	public List<HashMap<String, Object>> selectList(String table) throws SQLException {
-		return sqlSession.selectOne("model.selectAll", table);
+	public List<HashMap<String, Object>> selectList(String table, String pk) throws SQLException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("table", table);
+		params.put("pk", pk);
+		return sqlSession.selectOne("model.selectAll", params);
 	
 	}
 	
 	@Override
-	public List<HashMap<String, Object>> board_list(String table) throws SQLException {
-		List<HashMap<String, Object>> list = sqlSession.selectList("model.boardList", table);
+	public List<HashMap<String, Object>> board_list(String table, String pk) throws SQLException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("table", table);
+		params.put("pk", pk);
+		List<HashMap<String, Object>> list = sqlSession.selectList("model.boardList", params);
 		System.out.println(list);
 		return list;
 	}
@@ -202,7 +208,7 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 
 	@Override
-	public List<HashMap<String, Object>> board_paging(int page, String table) throws SQLException{
+	public List<HashMap<String, Object>> board_paging(int page, String table, String pk) throws SQLException{
 		HashMap<String, Object> params = new HashMap<String, Object>();
 
 		int maxRow = sqlSession.selectOne("model.boardCount", table);
@@ -217,9 +223,12 @@ public class ModelDaoImpl1 implements ModelDao {
 		
 		System.out.println(row_min);
 		System.out.println(row_max);
-
+		
+		params.put("table", table);
 		params.put("min", row_min);
 		params.put("max", row_max);
+		params.put("pk", pk);
+		
 		
 		if(maxRow>0){
 			list = sqlSession.selectList("model.boardPaging", params);
@@ -287,13 +296,14 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 
 	@Override
-	public List<HashMap<String, Object>> board_search(String search_type, String search_text, String table, String schema) throws SQLException{
+	public List<HashMap<String, Object>> board_search(String search_type, String search_text, String table, String schema, String pk) throws SQLException{
 		List<HashMap<String, Object>> list = null;
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", search_type);
 		params.put("text", search_text);
 		params.put("table", table);
 		params.put("schema", schema);
+		params.put("pk", pk);
 		
 		if(search_type.equals("sub")){
 			list = sqlSession.selectList("model.boardSearch", params);
@@ -325,13 +335,14 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 
 	@Override
-	public List<HashMap<String, Object>> board_searchPaging(String search_type, String search_text, String table, String schema, int idx) throws SQLException {
+	public List<HashMap<String, Object>> board_searchPaging(String search_type, String search_text, String table, String schema, String pk, int idx) throws SQLException {
 		List<HashMap<String, Object>> list = null;
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", search_type);
 		params.put("text", search_text);
 		params.put("table", table);
 		params.put("schema", schema);
+		params.put("pk", pk);
 		
 		// if(search_type.equals("sub")){
 		// 	list = sqlSession.selectList("model.boardSearch", params);
@@ -347,7 +358,7 @@ public class ModelDaoImpl1 implements ModelDao {
 		
 		
 		
-		int maxRow = sqlSession.selectOne("model.boardSearchMax", params);
+		int maxRow = sqlSession.selectOne("model.boardSearchCount", params);
 		
 		System.out.println("pagingmaxRow"+ maxRow);
 		int row_max = maxRow - ((--idx) * 10 );
@@ -420,16 +431,7 @@ public class ModelDaoImpl1 implements ModelDao {
 
 	
 
-	@Override
-	public Map<String, Object> board_detail(int idx, String table) throws SQLException {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		params.put("idx", idx);
-		params.put("table", table);
-		Map<String, Object> list = sqlSession.selectOne("model.boardDetailOne", params);
-		System.out.println(list);
-		return list;
-	}
+	
 
 	@Override
 	public void alarm_addOne(HashMap<String, Object> bean) throws SQLException {
@@ -437,11 +439,11 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 
 	@Override
-	public void alarm_cnt(int idx) throws SQLException {
+	public void alarm_cnt(int idx, String table, String pk, String cnt) throws SQLException {
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("table", "inform");
-		params.put("pk", "anum");
-		params.put("cnt", "achk");
+		params.put("table", table);
+		params.put("pk", pk);
+		params.put("cnt", cnt);
 		params.put("idx", idx);
 		
 		HashMap<String, Object> result = sqlSession.selectOne("model.boardViewCnt", params);
@@ -459,9 +461,33 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 
 	@Override
-	public Integer board_nowPage(int idx, String table) {
+	public Map<String, Object> board_detail(int idx, String table, String pk) throws SQLException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params.put("idx", idx);
+		params.put("table", table);
+		params.put("pk", pk);
+		Map<String, Object> list = sqlSession.selectOne("model.boardDetailOne", params);
+		System.out.println(list);
+		return list;
+	}
+	
+	@Override
+	public Integer board_nowPage(int idx, String table, String pk) {
+     // int maxRow = sqlSession.selectOne("model.boardCount", table);
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("table", table);
+		params.put("idx", idx);
+		params.put("pk", pk);
+		
+		int pageIdx = sqlSession.selectOne("model.boardPageCount", params);
+		
+		System.out.println("pageIDx: "+pageIdx);
+		
 		int maxRow = sqlSession.selectOne("model.boardCount", table);
-		int nowRow =(maxRow - idx) + 1;
+		
+		int nowRow = (maxRow - pageIdx) + 1;
 		int pageNum = 0;
 		if(nowRow > 10){
 			pageNum = nowRow / 10;
@@ -471,6 +497,8 @@ public class ModelDaoImpl1 implements ModelDao {
 		}else{
 			pageNum = 1;
 		}
+		System.out.println("pageNum"+pageNum);
+		
 		return pageNum;
 	}
 
@@ -480,24 +508,24 @@ public class ModelDaoImpl1 implements ModelDao {
 	}
 
 	@Override
-	public void board_deleteNum(int idx, String table, String schema) throws SQLException {
+	public void board_deleteNum(int idx, String table, String pk) throws SQLException {
 		HashMap<String, Object> bean = new HashMap<String, Object>();
 		bean.put("idx", idx);
 		bean.put("table", table);
-		bean.put("schema", schema);
-		int primaryNumKey = sqlSession.selectOne("model.boardViewPKnum", bean);
-		bean.put("num", primaryNumKey);
+		bean.put("pk", pk);
+		//int primaryNumKey = sqlSession.selectOne("model.boardViewPKnum", bean);
+		//bean.put("num", primaryNumKey);
 		sqlSession.delete("model.boardDeleteOne_Num",bean);
 	}
 
 	@Override
-	public void board_deleteString(int idx, String table, String schema) throws SQLException {
+	public void board_deleteString(String idx, String table, String pk) throws SQLException {
 		HashMap<String, Object> bean = new HashMap<String, Object>();
 		bean.put("idx", idx);
 		bean.put("table", table);
-		bean.put("schema", schema);
-		String primaryStringKey = sqlSession.selectOne("model.boardViewPKstring", bean);
-		bean.put("string", primaryStringKey);
+		bean.put("pk", pk);
+		//String primaryStringKey = sqlSession.selectOne("model.boardViewPKstring", bean);
+		//bean.put("string", primaryStringKey);
 		sqlSession.delete("model.boardDetailOne_String",bean);
 	}
 

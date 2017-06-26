@@ -29,7 +29,7 @@ public class ErpController{
 	@RequestMapping("/erp/alarm")
 	public String alarm(Model model){
 		try {
-			model.addAttribute("alist", modelDao.board_list("inform"));
+			model.addAttribute("alist", modelDao.board_list("inform","ANUM"));
 			model.addAttribute("links", modelDao.board_pagelinks("inform"));
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -57,11 +57,11 @@ public class ErpController{
 				
 			}else if(search_text != null && req.getMethod().equals("POST")){
 				if(search_type.equals("sub")){
-					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ASUB"));
+					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ASUB","ANUM"));
 					
 				}
 				if(search_type.equals("cntnt")){
-					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ACNTNT"));
+					model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","ACNTNT","ANUM"));
 				}
 				//if(search_type == "author") model.addAttribute("alist", modelDao.board_search(search_type, search_text,"inform","A"));
 			}
@@ -132,7 +132,7 @@ public class ErpController{
 				}
 				
 				System.out.println("만료"+sess);
-				model.addAttribute("alist", modelDao.board_paging(idx,"INFORM"));
+				model.addAttribute("alist", modelDao.board_paging(idx,"INFORM","anum"));
 				startend = modelDao.page_startEnd(idx,"INFORM");		
 				
 				model.addAttribute("links", modelDao.board_pagelinks(idx, "INFORM"));
@@ -143,12 +143,12 @@ public class ErpController{
 				System.out.println("도중"+sess);
 				
 				if(sess_type.equals("sub")){
-					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ASUB", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ASUB","ANUM", idx));
 					startend = modelDao.pageSearch_startEnd(sess_type, sess_text,"inform","ASUB",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(sess_type,sess_text,"INFORM","ASUB", idx));
 				}
 				if(sess_type.equals("cntnt")){
-					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ACNTNT", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ACNTNT","ANUM", idx));
 					startend = modelDao.pageSearch_startEnd(sess_type, sess_text,"inform","ACNTNT",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(sess_type,sess_text,"INFORM","ACNTNT", idx));
 				}
@@ -168,12 +168,12 @@ public class ErpController{
 				
 				if(search_type.equals("sub")){
 					
-					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ASUB", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ASUB", "ANUM", idx));
 					startend = modelDao.pageSearch_startEnd(search_type, search_text,"inform","ASUB",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(search_type,search_text,"INFORM","ASUB", idx));
 				}
 				if(search_type.equals("cntnt")){
-					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ACNTNT", idx));
+					model.addAttribute("alist", modelDao.board_searchPaging(search_type, search_text,"inform","ACNTNT", "ANUM", idx));
 					startend = modelDao.pageSearch_startEnd(search_type, search_text,"inform","ACNTNT",idx);
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(search_type,search_text,"INFORM","ACNTNT", idx));
 				}
@@ -226,18 +226,7 @@ public class ErpController{
 
 		return "erp/alarm_list";
 	}	
-	@RequestMapping(value="/erp/alarm/detail/{idx}", method=RequestMethod.GET)
-	public String alarmDetail(@PathVariable int idx, Model model){
-		try{
-			model.addAttribute("detail", modelDao.board_detail(idx, "inform"));
-			modelDao.alarm_cnt(idx);
-			model.addAttribute("nowPage", modelDao.board_nowPage(idx, "inform"));
-			model.addAttribute("idx", idx);
-		}catch (SQLException e){
-			e.printStackTrace();
-		}
-		return "erp/alarm_detail";
-	}	
+	
 
 	@RequestMapping(value="/erp/alarm/add",method={RequestMethod.GET,RequestMethod.POST})
 	public String alarmAdd(HttpServletRequest req){
@@ -267,6 +256,19 @@ public class ErpController{
 		return "erp/alarm_add";
 	}
 	
+	@RequestMapping(value="/erp/alarm/detail/{idx}", method=RequestMethod.GET)
+	public String alarmDetail(@PathVariable int idx, Model model){
+		try{
+			model.addAttribute("detail", modelDao.board_detail(idx, "inform", "anum"));
+			modelDao.alarm_cnt(idx, "inform", "anum", "achk");
+			model.addAttribute("nowPage", modelDao.board_nowPage(idx, "inform", "anum"));
+			model.addAttribute("idx", idx);
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return "erp/alarm_detail";
+	}	
+	
 	@RequestMapping(value="/erp/alarm/edit/{idx}",method={RequestMethod.GET, RequestMethod.POST})
 	public String alarmEdit(@PathVariable int idx, Model model, HttpServletRequest req){
 		try {
@@ -276,8 +278,8 @@ public class ErpController{
 		}
 		try {
 			if(req.getMethod().equals("GET")){
-				model.addAttribute("detail", modelDao.board_detail(idx, "inform"));
-				model.addAttribute("nowPage", modelDao.board_nowPage(idx, "inform"));
+				model.addAttribute("detail", modelDao.board_detail(idx, "inform", "anum"));
+				model.addAttribute("nowPage", modelDao.board_nowPage(idx, "inform", "anum"));
 			}else if(req.getMethod().equals("POST")){
 	
 				HashMap<String,Object> bean = new HashMap<String,Object>();
@@ -286,7 +288,7 @@ public class ErpController{
 				bean.put("anum", req.getParameter("anum"));
 				modelDao.alarm_edit(bean);
 				
-				Integer nowPage = modelDao.board_nowPage(idx, "inform");
+				Integer nowPage = modelDao.board_nowPage(idx, "inform", "anum");
 				return "redirect:../" + nowPage;	
 			}	
 		} catch (SQLException e) {
@@ -300,8 +302,8 @@ public class ErpController{
 	public String alarmDelete(@PathVariable int idx){
 		Integer nowPage = null;
 		try {
+			nowPage = modelDao.board_nowPage(idx, "inform","anum");
 			modelDao.board_deleteNum(idx,"inform","anum");
-			nowPage = modelDao.board_nowPage(idx, "inform");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -379,7 +381,7 @@ public class ErpController{
 		
 		if(area == null && fname == null || req.getMethod().equals("GET")){
 			try {
-				model.addAttribute("slist", modelDao.selectList("franchise"));
+				model.addAttribute("slist", modelDao.selectList("franchise","FNUM"));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -406,7 +408,7 @@ public class ErpController{
 	public String storeDetail(@PathVariable int idx, Model model){
 
 		try {
-			model.addAttribute("list", modelDao.board_detail(idx,"franchise"));
+			model.addAttribute("list", modelDao.board_detail(idx,"franchise","FNUM"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -423,7 +425,7 @@ public class ErpController{
 		}
 		try {
 			if(req.getMethod().equals("GET")){
-				model.addAttribute("list", modelDao.board_detail(idx, "franchise"));
+				model.addAttribute("list", modelDao.board_detail(idx, "franchise","FNUM"));
 				return "erp/store_edit";
 			}else if(req.getMethod().equals("POST")){
 	
@@ -433,7 +435,7 @@ public class ErpController{
 				bean.put("anum", req.getParameter("anum"));
 				modelDao.store_edit(bean);
 				
-				Integer nowPage = modelDao.board_nowPage(idx, "inform");
+				Integer nowPage = modelDao.board_nowPage(idx, "inform", "anum");
 				return "redirect:../" + nowPage;	
 			}	
 		} catch (SQLException e) {
@@ -474,7 +476,7 @@ public class ErpController{
 		Integer nowPage = null;
 		try {
 			modelDao.board_deleteNum(idx,"franchise","fnum");
-			nowPage = modelDao.board_nowPage(idx, "franchise");
+			nowPage = modelDao.board_nowPage(idx, "franchise", "fnum");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

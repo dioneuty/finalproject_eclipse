@@ -3,27 +3,30 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="model">
-	<select id="selectAll" resultType="hashmap" parameterType="String">
-		SELECT ROWNUM RNUM, T.* FROM ${VALUE} t 
+	<select id="selectAll" resultType="hashmap" parameterType="hashmap">
+		SELECT * FROM (select ROWNUM RNUM, i.* from ${table} i order by ${pk})
 	</select>
 	
 	<!-- board sql -->
 	<!-- board basic paging -->
-	<select id="boardList" resultType="hashmap" parameterType="String">
-		SELECT ROWNUM RNUM, T.* FROM ${value} T ORDER BY RNUM DESC
+	<select id="boardList" resultType="hashmap" parameterType="hashmap">
+		SELECT * FROM (select ROWNUM RNUM, i.* from ${table} i order by ${pk}) ORDER BY RNUM DESC
 	</select>
 	<select id="boardCount" resultType="int" parameterType="String">
 		SELECT COUNT(ROWNUM) FROM ${value}
+	</select>
+	<select id="boardPageCount" resultType="int" parameterType="hashmap">
+		SELECT RNUM FROM (SELECT ROWNUM RNUM, i.* from ${table} i) WHERE ${pk}=${idx}  
 	</select>
 	<select id="boardMax" resultType="int" parameterType="String">
 		SELECT MAX(ROWNUM) FROM ${value}
 	</select>
 	<select id="boardPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk} ASC) WHERE RNUM BETWEEN ${min} AND ${max}
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk}) WHERE RNUM BETWEEN ${min} AND ${max} ORDER BY RNUM DESC
 	</select>
 	<!-- board search paging -->
 	<select id="boardSearch" resultType="hashmap" parameterType="hashmap">
-		SELECT ROWNUM RNUM, T.* FROM ${table} t WHERE ${schema} LIKE '%'||#{text}||'%'
+		SELECT * FROM (select ROWNUM RNUM, T.* FROM ${table} t order by ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' ORDER BY RNUM DESC
 	</select>
 	<select id="boardDateSearch" resultType="hashmap" parameterType="hashmap">
 		SELECT ROWNUM RNUM, T.* FROM ${table} T WHERE ${schema} BETWEEN #{data1} AND #{date2}
@@ -32,28 +35,28 @@
 		SELECT COUNT(ROWNUM) FROM ${table} WHERE ${schema} LIKE '%'||#{text}||'%'
 	</select>
 	<select id="boardSearchPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk} ASC) WHERE ${schema} LIKE '%'||#{text}||'%' AND RNUM BETWEEN ${min} and ${max} 
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' AND RNUM BETWEEN ${min} and ${max} ORDER BY RNUM DESC
 	</select>
 	<!-- board detail -->
 	<select id="boardDetailOne" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM = ${idx}
+		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
 	<select id="boardViewPKnum" resultType="int" parameterType="hashmap">
-		SELECT ${schema} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM = ${idx}
+		SELECT ${pk} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
 	<select id="boardViewPKstring" resultType="String" parameterType="hashmap">
-		SELECT ${schema} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE RNUM = ${idx}
+		SELECT ${pk} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
 	<!-- board delete -->
 	<delete id="boardDeleteOne_String" parameterType="hashmap">
-		DELETE FROM ${table} WHERE ${schema}=#{string}
+		DELETE FROM ${table} WHERE ${pk}=#{string}
 	</delete>
 	<delete id="boardDeleteOne_Num" parameterType="hashmap">
-		DELETE FROM ${table} WHERE ${schema}=${num}
+		DELETE FROM ${table} WHERE ${pk}=${idx}
 	</delete>
 	<!-- board view count -->
 	<select id="boardViewCnt" resultType="hashmap" parameterType="hashmap">
-		SELECT anum, achk FROM (SELECT ROWNUM RNUM, i.* FROM ${table} i ORDER BY RNUM DESC) WHERE RNUM = ${idx}
+		SELECT ${pk}, ${cnt} FROM (SELECT ROWNUM RNUM, i.* FROM ${table} i ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
 	
 	<!-- alarm_Board -->
