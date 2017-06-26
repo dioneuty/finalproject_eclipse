@@ -43,10 +43,10 @@ public class ModelDaoImpl1Test {
 		//List<HashMap<String, Object>> list = dao.so_storeList();
         //System.out.println(list);
 		//assertTrue((dao.so_storeList()).size()>0);
-//		assertNotNull((dao.so_storeListFname("¾Ë°í")));
+//		assertNotNull((dao.so_storeListFname("ï¿½Ë°ï¿½")));
         //assertTrue((dao.board_list("inform")).size()>0);
         //assertTrue(dao.board_detail(43, "inform").size()>0);
-		assertTrue(dao.board_select(2, "inform", "anum").size()>0);
+		assertTrue(dao.board_searchPaging("sub", "ì§„","inform","ASUB","ANUM", 2).size()>0);
 //		int row = 23;
 //		int ten = 10;
 //		assertSame( row / 10, 2);

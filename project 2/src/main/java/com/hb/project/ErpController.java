@@ -119,7 +119,7 @@ public class ErpController{
 		
 		String search_text = req.getParameter("search_text");	
 		String search_type = req.getParameter("search_type");
-		
+		 
 		Map<String, Integer> startend = null;
 		HttpSession sess = req.getSession();
 		try {
@@ -153,7 +153,6 @@ public class ErpController{
 					model.addAttribute("links", modelDao.boardSearch_pagelinks(sess_type,sess_text,"INFORM","ACNTNT", idx));
 				}
 				//if(sess_type == "author") model.addAttribute("alist", modelDao.board_search(sess_type, sess_text,"inform","A"));
-				
 				
 				model.addAttribute("sess_text", (String) sess.getAttribute("searText"));
 				model.addAttribute("sess_type", (String) sess.getAttribute("searType"));

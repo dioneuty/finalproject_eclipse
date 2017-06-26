@@ -35,7 +35,7 @@
 		SELECT COUNT(ROWNUM) FROM ${table} WHERE ${schema} LIKE '%'||#{text}||'%'
 	</select>
 	<select id="boardSearchPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' AND RNUM BETWEEN ${min} and ${max} ORDER BY RNUM DESC
+		SELECT * FROM (select ROWNUM RNUM, T.* FROM ${table} t order by ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' and RNUM BETWEEN ${min} and ${max} ORDER BY RNUM DESC
 	</select>
 	<!-- board detail -->
 	<select id="boardDetailOne" resultType="hashmap" parameterType="hashmap">

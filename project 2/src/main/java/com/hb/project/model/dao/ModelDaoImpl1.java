@@ -298,7 +298,6 @@ public class ModelDaoImpl1 implements ModelDao {
 	public List<HashMap<String, Object>> board_search(String search_type, String search_text, String table, String schema, String pk) throws SQLException{
 		List<HashMap<String, Object>> list = null;
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("type", search_type);
 		params.put("text", search_text);
 		params.put("table", table);
 		params.put("schema", schema);
@@ -337,7 +336,6 @@ public class ModelDaoImpl1 implements ModelDao {
 	public List<HashMap<String, Object>> board_searchPaging(String search_type, String search_text, String table, String schema, String pk, int idx) throws SQLException {
 		List<HashMap<String, Object>> list = null;
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("type", search_type);
 		params.put("text", search_text);
 		params.put("table", table);
 		params.put("schema", schema);
@@ -369,6 +367,7 @@ public class ModelDaoImpl1 implements ModelDao {
 
 		params.put("min", row_min);
 		params.put("max", row_max);
+		
 		
 		if(maxRow > 0){
 			list = sqlSession.selectList("model.boardSearchPaging", params);
@@ -448,7 +447,7 @@ public class ModelDaoImpl1 implements ModelDao {
 		HashMap<String, Object> result = sqlSession.selectOne("model.boardViewCnt", params);
 		System.out.println(result);
 		
-		// ÁÖÀÇ! ¹«Á¶°Ç ´ë¹®ÀÚ warning: you must type the names of parameters in Uppercase
+		// ï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ë¹®ï¿½ï¿½ warning: you must type the names of parameters in Uppercase
 		int nowcnt = Integer.parseInt(String.valueOf(result.get("ACHK")));
 		int anum = Integer.parseInt(String.valueOf(result.get("ANUM")));
 
