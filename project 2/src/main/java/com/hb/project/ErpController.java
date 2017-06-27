@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hb.project.model.dao.ModelDao;
 
@@ -25,6 +26,138 @@ public class ErpController{
 	@Autowired
 	private ModelDao modelDao;
 	private static final Logger logger = LoggerFactory.getLogger(ErpController.class);
+	
+	@RequestMapping(value={"/erp/headnotice/{idx}"} ,method={RequestMethod.POST,RequestMethod.GET})
+	public String headnoticeSearch (@PathVariable int idx, Model model, HttpServletRequest req){
+		try {
+			req.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		
+		String search_text = req.getParameter("search_text");	
+		String search_type = req.getParameter("search_type");
+		 
+		Map<String, Integer> startend = null;
+		HttpSession sess = req.getSession();
+		try {
+			if(req.getParameter("search_text") == null && req.getMethod().equals("POST") || sess.getAttribute("searText") == null && req.getMethod().equals("GET") || req.getParameter("list")!= null && req.getMethod().equals("POST")){
+				sess.setAttribute("searType", null);
+				sess.setAttribute("searText", null);
+				
+				if(!( req.getParameter("search_text") == null && req.getMethod().equals("GET") ) ){
+					idx = 1;
+				}
+				
+				System.out.println("쨍쨍쨌찼"+sess);
+				model.addAttribute("list", modelDao.board_paging(idx,"headnotice","bnum"));
+				startend = modelDao.page_startEnd(idx,"headnotice");		
+				
+				model.addAttribute("links", modelDao.board_pagelinks(idx, "headnotice"));
+			
+			}else if(sess.getAttribute("searText") != null && req.getMethod().equals("GET")){
+				String sess_text = (String) sess.getAttribute("searText");
+				String sess_type = (String) sess.getAttribute("searType");
+				System.out.println("쨉쨉횁횩"+sess);
+				
+				if(sess_type.equals("sub")){
+					model.addAttribute("list", modelDao.board_searchPaging(sess_type, sess_text,"headnotice","BSUB","BNUM", idx));
+					startend = modelDao.pageSearch_startEnd(sess_type, sess_text,"headnotice","BSUB",idx);
+					model.addAttribute("links", modelDao.boardSearch_pagelinks(sess_type,sess_text,"headnotice","BSUB", idx));
+				}
+				if(sess_type.equals("cntnt")){
+					model.addAttribute("list", modelDao.board_searchPaging(sess_type, sess_text,"headnotice","BCNTNT","BNUM", idx));
+					startend = modelDao.pageSearch_startEnd(sess_type, sess_text,"headnotice","BCNTNT",idx);
+					model.addAttribute("links", modelDao.boardSearch_pagelinks(sess_type,sess_text,"headnotice","BCNTNT", idx));
+				}
+				//if(sess_type == "author") model.addAttribute("board", modelDao.board_search(sess_type, sess_text,"headnotice","B"));
+				
+				model.addAttribute("sess_text", (String) sess.getAttribute("searText"));
+				model.addAttribute("sess_type", (String) sess.getAttribute("searType"));
+				
+			}else if(req.getParameter("search_text") != null && req.getMethod().equals("POST")) {
+				
+				idx = 1;
+				
+				System.out.println("세션: "+sess);
+				sess.setAttribute("searType", search_type);
+				sess.setAttribute("searText", search_text);	
+				
+				if(search_type.equals("sub")){
+					
+					model.addAttribute("list", modelDao.board_searchPaging(search_type, search_text,"headnotice","BSUB", "BNUM", idx));
+					startend = modelDao.pageSearch_startEnd(search_type, search_text,"headnotice","BSUB",idx);
+					model.addAttribute("links", modelDao.boardSearch_pagelinks(search_type,search_text,"headnotice","BSUB", idx));
+				}
+				if(search_type.equals("cntnt")){
+					model.addAttribute("list", modelDao.board_searchPaging(search_type, search_text,"headnotice","BCNTNT", "BNUM", idx));
+					startend = modelDao.pageSearch_startEnd(search_type, search_text,"headnotice","BCNTNT",idx);
+					model.addAttribute("links", modelDao.boardSearch_pagelinks(search_type,search_text,"headnotice","BCNTNT", idx));
+				}
+				//if(search_type == "author") model.addAttribute("board", modelDao.board_search(search_type, search_text,"headnotice","B"));
+				
+				
+				model.addAttribute("sess_text", (String) sess.getAttribute("searText"));
+				model.addAttribute("sess_type", (String) sess.getAttribute("searType"));
+			}
+		
+			int pageNum = startend.get("pageNum");
+			int colCnt = ((idx - 1) / 5) + 1; 
+			int maxCol = ((pageNum - 1) / 5) + 1 ;
+			int nextCol = (idx-1) / 5 * 5 + 6;
+			
+			if(idx > pageNum){
+				return "error/404";
+			}
+			
+			//|| req.getParameter("sty") != null && req.getParameter("ste") != null)
+			//			if(req.getParameter("hiddentext") != null && req.getParameter("hiddentext").equals(search_text) ){
+			//				search_text = req.getParameter("hiddentext");
+			//				search_type = req.getParameter("hiddentype");
+			//			}else{
+							
+			//			}
+			
+			
+			
+			//model.addAttribute("links", links);
+			model.addAttribute("idx", idx);
+			model.addAttribute("colCnt", colCnt);
+			model.addAttribute("maxCol", maxCol);
+
+			if(colCnt == 1) {
+				if (maxCol > 1){
+					model.addAttribute("nextPg", startend.get("nextPage"));
+				}else if(maxCol == 1){}
+			}else if(colCnt > 1) {
+				if (colCnt < maxCol){
+					model.addAttribute("prevPg", startend.get("prevPage"));
+					model.addAttribute("nextPg", startend.get("nextPage"));
+				}else if(colCnt == maxCol) {
+					model.addAttribute("prevPg", startend.get("prevPage"));
+				}	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "erp/headnotice_list";
+	}	
+	
+	@RequestMapping(value="/erp/headnotice/detail/{idx}", method=RequestMethod.GET)
+	public String headnoticeDetail(@PathVariable int idx, Model model){
+		try{
+			model.addAttribute("detail", modelDao.board_detail(idx, "headnotice", "bnum"));
+			modelDao.board_cnt(idx, "headnotice", "bnum", "bcnt");
+			model.addAttribute("nowPage", modelDao.board_nowPage(idx, "headnotice", "bnum"));
+			model.addAttribute("idx", idx);
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return "erp/headnotice_detail";	
+	}	
+
+
 	
 	@RequestMapping("/erp/alarm")
 	public String alarm(Model model){
@@ -53,7 +186,7 @@ public class ErpController{
 		try {
 			List<HashMap<String, Object>> alist = null;
 			if(search_text == null || req.getMethod().equals("GET")){
-				alarm(model); //ÇÁ·ÐÆ®¾Øµå·Î Á¦¾îÇÒÁö, ¹é¾Øµå·Î Á¦¾îÇÒÁö °í¹Î Áß
+				alarm(model); //프론트엔드로 제어할지 백엔드로 제어할지 고민 중
 				
 			}else if(search_text != null && req.getMethod().equals("POST")){
 				if(search_type.equals("sub")){
@@ -131,7 +264,7 @@ public class ErpController{
 					idx = 1;
 				}
 				
-				System.out.println("¸¸·á"+sess);
+				System.out.println("쨍쨍쨌찼"+sess);
 				model.addAttribute("alist", modelDao.board_paging(idx,"INFORM","anum"));
 				startend = modelDao.page_startEnd(idx,"INFORM");		
 				
@@ -140,7 +273,7 @@ public class ErpController{
 			}else if(sess.getAttribute("searText") != null && req.getMethod().equals("GET")){
 				String sess_text = (String) sess.getAttribute("searText");
 				String sess_type = (String) sess.getAttribute("searType");
-				System.out.println("µµÁß"+sess);
+				System.out.println("쨉쨉횁횩"+sess);
 				
 				if(sess_type.equals("sub")){
 					model.addAttribute("alist", modelDao.board_searchPaging(sess_type, sess_text,"inform","ASUB","ANUM", idx));
@@ -161,7 +294,7 @@ public class ErpController{
 				
 				idx = 1;
 				
-				System.out.println("Ã³½"+sess);
+				System.out.println("세션: "+sess);
 				sess.setAttribute("searType", search_type);
 				sess.setAttribute("searText", search_text);	
 				
@@ -366,6 +499,30 @@ public class ErpController{
 		return "/erp/revenue_cost";
 	}
 
+	@RequestMapping(value="/erp/ware/list",method={RequestMethod.GET,RequestMethod.POST})
+	public String wareList (Model model, HttpServletRequest req){
+		try {
+			req.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		Integer wtype = Integer.parseInt(req.getParameter("wtype"));
+		String wname = req.getParameter("wname");
+		
+		try {
+			if(wtype == null && wname == null || req.getMethod().equals("GET")){
+					model.addAttribute("list", modelDao.selectList("ware","wnum"));
+			}else if(wtype!=null && req.getMethod().equals("POST")){
+					model.addAttribute("list", modelDao.searchListNum("ware","wnum","wtype",wtype));
+			}else if (wname!=null && req.getMethod().equals("POST")) {
+				System.out.println("wname");
+					model.addAttribute("list", modelDao.searchListString("ware","wnum","wname",wname));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "erp/ware_list";
+	}	
 	
 
 	@RequestMapping(value="/erp/store/list",method={RequestMethod.GET,RequestMethod.POST})
@@ -380,12 +537,12 @@ public class ErpController{
 		
 		try {
 			if(area == null && fname == null || req.getMethod().equals("GET")){
-					model.addAttribute("slist", modelDao.selectList("franchise","FNUM"));
+					model.addAttribute("list", modelDao.selectList("franchise","FNUM"));
 			}else if(area!=null && req.getMethod().equals("POST")){
-					model.addAttribute("slist", modelDao.so_storeList("franchise","fnum","area",area));
+					model.addAttribute("list", modelDao.searchListString("franchise","fnum","faddress",area));
 			}else if (fname!=null && req.getMethod().equals("POST")) {
 				System.out.println("fname");
-					model.addAttribute("slist", modelDao.so_storeList("franchise","fnum","fname",fname));
+					model.addAttribute("list", modelDao.searchListString("franchise","fnum","fname",fname));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

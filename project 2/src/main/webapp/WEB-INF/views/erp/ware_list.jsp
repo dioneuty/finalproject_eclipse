@@ -46,18 +46,20 @@
 					<div class="row">
 						<form method="post" class="form-inline">
 							<div class="form-group col-sm-offset-1 col-sm-5">
-								<label for="area">지역</label>
-								<select name="area" class="form-control" id="goods_type">
-									<option value="서울">서울특별시</option>
-									<option value="부산">부산광역시</option>
+								<label for="wtype">제품 종류</label>
+								<select name="wtype" class="form-control" id="goods_type">
+									<option value="1">식기류</option>
+									<option value="2">요리기구</option>
+									<option value="3">의류</option>
+									<option value="4">식재료</option>
 								</select>
-								<button class="btn btn-default" type="submit">점포리스트 검색</button>
+								<button class="btn btn-default" type="submit">제품 이름 검색</button>
 							</div>
 						</form>
 						<form method="post" class="form-inline">
 							<div class="form-group text-left col-sm-5col-sm-offset-1">
-								<label for="fname">점포</label>
-									<input type="text" class="form-control" name="fname" id="fname" placeholder="">
+								<label for="wname">점포</label>
+									<input type="text" class="form-control" name="wname" id="wname" placeholder="">
 								<button class="btn btn-default" type="submit">점포검색</button>
 							</div>
 						</form>
@@ -79,12 +81,14 @@
 					</tr>
 					<c:forEach items="${ list}" var="store">
 					<tr>
-						<td><a href="./detail/${store.FNUM}">${store.FNUM }</a></td>
-						<td><a href="./detail/${store.FNUM}">${store.FNAME }</a></td>
-						<td><a href="./detail/${store.FNUM}">${store.FPHONE }</a></td>
-						<td><a href="./detail/${store.FNUM}">${store.FADDRESS }</a></td>
-						<a href="./edit/${store.FNUM}" class="btn btn-default" role="button">수정</a>
-						<a href="./delete/${store.FNUM}" class="btn btn-default" role="button">삭제</a>
+						<td><a href="./detail/${list.WNUM}">${list.WNUM }</a></td>
+						<td><a href="./detail/${list.WNUM}">${list.WNAME }</a></td>
+						<c:if test="${list.WTYPE.equals(1) }"><td><a href="./detail/${list.WNUM}">식기류</a></td></c:if>
+						<c:if test="${list.WTYPE.equals(2) }"><td><a href="./detail/${list.WNUM}">요리기구</a></td></c:if>
+						<c:if test="${list.WTYPE.equals(3) }"><td><a href="./detail/${list.WNUM}">의류</a></td></c:if>
+						<c:if test="${list.WTYPE.equals(4) }"><td><a href="./detail/${list.WNUM}">식재료</a></td></c:if>
+						<a href="./edit/${list.WNUM}" class="btn btn-default" role="button">수정</a>
+						<a href="./delete/${list.WNUM}" class="btn btn-default" role="button">삭제</a>
 					</tr>
 					</c:forEach>
 					

@@ -46,7 +46,7 @@ public class ModelDaoImpl1Test {
 //		assertNotNull((dao.so_storeListFname("�˰�")));
         //assertTrue((dao.board_list("inform")).size()>0);
         //assertTrue(dao.board_detail(43, "inform").size()>0);
-		assertTrue(dao.board_searchPaging("sub", "진","inform","ASUB","ANUM", 2).size()>0);
+		assertTrue(dao.searchListString("FRANCHISE", "FNUM", "FADDRESS", "부산").size()>0);
 //		int row = 23;
 //		int ten = 10;
 //		assertSame( row / 10, 2);

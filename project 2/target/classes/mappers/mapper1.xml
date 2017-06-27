@@ -4,48 +4,48 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="model">
 	<select id="selectAll" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (select ROWNUM RNUM, i.* from ${table} i order by ${pk}) ORDER BY RNUM
+		SELECT * FROM (select ROWNUM AS RNUM, i.* from ${table} i order by ${pk}) ORDER BY RNUM
 	</select>
 	
 	<!-- board sql -->
-	<!-- board basic paging -->
+	<!-- board bASic paging -->
 	<select id="boardList" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (select ROWNUM RNUM, i.* from ${table} i order by ${pk}) ORDER BY RNUM DESC
+		SELECT * FROM (select ROWNUM AS RNUM, i.* from ${table} i order by ${pk}) ORDER BY RNUM DESC
 	</select>
 	<select id="boardCount" resultType="int" parameterType="String">
 		SELECT COUNT(ROWNUM) FROM ${value}
 	</select>
 	<select id="boardPageCount" resultType="int" parameterType="hashmap">
-		SELECT RNUM FROM (SELECT ROWNUM RNUM, i.* from ${table} i) WHERE ${pk}=${idx}  
+		SELECT RNUM FROM (SELECT ROWNUM AS RNUM, i.* from ${table} i) WHERE ${pk}=${idx}  
 	</select>
 	<select id="boardMax" resultType="int" parameterType="String">
 		SELECT MAX(ROWNUM) FROM ${value}
 	</select>
 	<select id="boardPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY ${pk}) WHERE RNUM BETWEEN ${min} AND ${max} ORDER BY RNUM DESC
+		SELECT * FROM (SELECT ROWNUM AS RNUM, I.* FROM ${table} I ORDER BY ${pk}) WHERE RNUM BETWEEN ${min} AND ${max} ORDER BY RNUM DESC
 	</select>
 	<!-- board search paging -->
 	<select id="boardSearch" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (select ROWNUM RNUM, T.* FROM ${table} t order by ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' ORDER BY RNUM DESC
+		SELECT * FROM (select ROWNUM AS RNUM, T.* FROM ${table} t order by ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' ORDER BY RNUM DESC
 	</select>
 	<select id="boardDateSearch" resultType="hashmap" parameterType="hashmap">
-		SELECT ROWNUM RNUM, T.* FROM ${table} T WHERE ${schema} BETWEEN #{data1} AND #{date2}
+		SELECT ROWNUM AS RNUM, T.* FROM ${table} T WHERE ${schema} BETWEEN #{data1} AND #{date2}
 	</select>
 	<select id="boardSearchCount" resultType="int" parameterType="hashmap">
 		SELECT COUNT(ROWNUM) FROM ${table} WHERE ${schema} LIKE '%'||#{text}||'%'
 	</select>
 	<select id="boardSearchPaging" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (select ROWNUM RNUM, T.* FROM ${table} t order by ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' and RNUM BETWEEN ${min} and ${max} ORDER BY RNUM DESC
+		SELECT * FROM (select ROWNUM AS RNUM, T.* FROM ${table} t order by ${pk}) WHERE ${schema} LIKE '%'||#{text}||'%' and RNUM BETWEEN ${min} and ${max} ORDER BY RNUM DESC
 	</select>
 	<!-- board detail -->
 	<select id="boardDetailOne" resultType="hashmap" parameterType="hashmap">
-		SELECT * FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
+		SELECT * FROM (SELECT ROWNUM AS RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
 	<select id="boardViewPKnum" resultType="int" parameterType="hashmap">
-		SELECT ${pk} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
+		SELECT ${pk} FROM (SELECT ROWNUM AS RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
 	<select id="boardViewPKstring" resultType="String" parameterType="hashmap">
-		SELECT ${pk} FROM (SELECT ROWNUM RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
+		SELECT ${pk} FROM (SELECT ROWNUM AS RNUM, I.* FROM ${table} I ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
 	<!-- board delete -->
 	<delete id="boardDeleteOne_String" parameterType="hashmap">
@@ -56,24 +56,30 @@
 	</delete>
 	<!-- board view count -->
 	<select id="boardViewCnt" resultType="hashmap" parameterType="hashmap">
-		SELECT ${pk}, ${cnt} FROM (SELECT ROWNUM RNUM, i.* FROM ${table} i ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
+		SELECT ${pk}, ${cnt} FROM (SELECT ROWNUM AS RNUM, i.* FROM ${table} i ORDER BY RNUM DESC) WHERE ${pk} = ${idx}
 	</select>
+	<update id="boardUpCnt" parameterType="hashmap">
+		UPDATE ${table} SET ${cnt}=${nowcnt} WHERE ${pk} = ${idx}
+	</update>
+	
 	
 	<!-- alarm_Board -->
 	<insert id="alarmAdd" parameterType="hashmap">
 		INSERT INTO INFORM (ANUM,ASUB,ACNTNT,ASDATE,ACHK) VALUES (ALARM_SEQ.nextVal,#{sub},#{cntnt},SYSDATE,0)
-	</insert>
+	</insert>	
 	<update id="alarmUpCnt" parameterType="int">
 		UPDATE INFORM SET achk=1, ardate=SYSDATE WHERE anum = ${value}
 	</update>
 	<update id="alarmEdit" parameterType="hashmap">
-		UPDATE INFORM SET asub=#{sub}, acntnt=#{cntnt}, asdate=SYSDATE, ardate=NULL, achk=0 WHERE anum = ${anum}
+		UPDATE INFORM SET ASub=#{sub}, acntnt=#{cntnt}, ASdate=SYSDATE, ardate=NULL, achk=0 WHERE anum = ${anum}
 	</update>
-	
 
 	<!-- store -->
-	<select id="searchListOption" parameterType="String" resultType="hashmap">
-		SELECT * FROM (select ROWNUM rnum, t.* FROM ${table} t order by ${pk}) WHERE ${search_option} LIKE '%'||#{value}||'%' ORDER BY RNUM DESC
+	<select id="searchListOptionString" parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (select ROWNUM AS rnum, t.* FROM ${table} t order by ${pk}) WHERE ${search_option} LIKE '%'||#{val}||'%' ORDER BY RNUM DESC
+	</select>	
+	<select id="searchListOptionNum" parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (select ROWNUM AS rnum, t.* FROM ${table} t order by ${pk}) WHERE ${search_option} = ${val} ORDER BY RNUM DESC
 	</select>
 	<insert id="storeAdd" parameterType="hashmap">
 		INSERT INTO FRANCHISE (FNUM,FNAME,FPHONE,FADDRESS) VALUES (FRANCHISE_SEQ.nextVal,#{name},#{phone},#{address})
@@ -84,7 +90,7 @@
 	
 	<!-- etc -->
 	<select id="selectOne" parameterType="int" resultType="com.hb.project.model.dto1.AdminVo">
-		SELECT ROWNUM rnum, t.* FROM GUEST_DAY03 t WHERE SABUN=#{value}
+		SELECT ROWNUM AS rnum, t.* FROM GUEST_DAY03 t WHERE SABUN=#{value}
 	</select>
 	<insert id="insertOne" parameterType="com.hb.project.model.dto1.AdminVo">
 		INSERT INTO GUEST_DAY03 VALUES

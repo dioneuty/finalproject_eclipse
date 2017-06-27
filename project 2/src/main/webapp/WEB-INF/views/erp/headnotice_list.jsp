@@ -57,28 +57,19 @@
 							<table class="table table-hover">
 								<thead>
 									<tr class="info">
-										<th>알림번호</th>
-										<th>선택</th>
+										<th>번호</th>
 										<th>제목</th>
-										<th>발신날짜</th>
-										<th>수신날짜</th>
-										<th>알림확인여부</th>
+										<th>날짜</th>
+										<th>조회 수</th>
 									</tr>
 								</thead>
 								<tbody>
-									<C:forEach items="${alist }" var="alarm">
+									<C:forEach items="${list }" var="board">
 										<tr>
-											<td>${alarm.ANUM }</td>
-											<td><input type="checkbox" name="checkbox"></td>
-											<td><a href="./detail/${alarm.ANUM }">${alarm.ASUB }</a></td>
-											<td><fmt:formatDate value="${alarm.ASDATE}" pattern="yyyy.MM.dd"/></td>
-											<td><fmt:formatDate value="${alarm.ARDATE}" pattern="yyyy.MM.dd"/></td>
-											<C:if test="${alarm.ACHK == 1 }">
-											<td>확인</td>
-											</C:if>
-											<C:if test="${alarm.ACHK == 0 }">
-											<td>미확인</td>
-											</C:if>
+											<td>${board.BNUM }</td>
+											<td><a href="./detail/${board.BNUM }">${board.BSUB }</a></td>
+											<td><fmt:formatDate value="${board.BDATE}" pattern="yyyy.MM.dd"/></td>
+											<td>${board.BCNT }</td>
 										</tr>
 									</C:forEach>									
 								</tbody>
