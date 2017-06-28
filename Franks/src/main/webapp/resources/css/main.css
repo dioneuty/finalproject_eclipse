@@ -1,0 +1,50 @@
+    /* 페이지 전체 기본설정 */
+     * {
+            padding: 0px;
+            margin: 0px;
+
+        }
+    /* 페이지 헤더 부분 css */    
+    .header {
+        position: fixed;
+        z-index: 5;
+        width:100%;
+        min-width: 375px;
+       
+    }
+    
+    
+    .header>* {
+        height: 40px;
+        line-height: 40px;
+        background-color: rgb(49, 52, 59);
+        border: rgb(57, 60, 66) solid 0.5px;
+        box-sizing: border-box;
+        color :#929699;
+    }
+    .header span {
+        float: right;
+    }
+    .msgs{
+        width: 25px;
+        height: 17px;
+    }
+     /* 페이지 상단 메뉴부분 css */   
+    .menus {
+    	min-width:380px;
+    	padding:0px;
+        margin: 40px 0px 0px 0px;
+    }
+ 
+    /*content 부분 기본 설정 css */
+    .content>* {       
+        background-color: rgb(236, 237, 242);
+    }
+
+    /* footer부분 css */
+    .footer {
+        background-color: rgb(52, 73, 94);        
+    }
+    .footer * {
+        color: rgb(136, 151, 164);
+    }
